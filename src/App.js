@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
+import AddTodo from './Components/AddTodo/AddTodo';
+import Header from './Components/Header/Header';
+import Todos from './Components/Todos/Todos';
 import './App.css';
-
 function App() {
+
+  const [todos, setTodos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    setTodos(storedTodos);
+  }, []);
+
+  useEffect(() => {
+    if (todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  }, [todos]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+
+      <Header setSearchQuery={setSearchQuery} />
+
+      <Todos todos={todos} setTodos={setTodos} searchQuery={searchQuery} />
+
+      <AddTodo todos={todos} setTodos={setTodos} />
+
     </div>
   );
 }
